@@ -53,4 +53,33 @@ RSpec.describe App do
       end
     end
   end
+
+  describe 'GET /:id' do
+    let(:id) { '' }
+    let(:valid_id) { 'foo' }
+    let(:invalid_id) { 'invalid' }
+    let(:contents) { 'contents' }
+
+    before do
+      File.open(
+        File.join(uploads, "#{valid_id}.jpg"), 'w') { |f| f.write contents }
+      get "/#{id}"
+    end
+
+    context 'when a non-existant image is requested' do
+      let(:id) { invalid_id }
+
+      specify { expect(last_response.status).to eq(404)  }
+    end
+
+    context 'when a previously uploaded image is requested' do
+      let(:id) { valid_id }
+
+      specify { expect(last_response).to be_ok  }
+      specify { expect(last_response.body).to eq(contents) }
+      specify do
+        expect(last_response.headers['Content-Type']).to eq('image/jpeg')
+      end
+    end
+  end
 end

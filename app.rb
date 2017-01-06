@@ -21,4 +21,12 @@ class App < Sinatra::Base
 
     body id
   end
+
+  get '/:id' do
+    matching_files = Dir[File.join(image_dir, "#{params[:id]}.*")]
+
+    halt 404 unless matching_files.count == 1
+
+    send_file matching_files.first
+  end
 end
