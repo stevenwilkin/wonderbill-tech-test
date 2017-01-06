@@ -16,6 +16,7 @@ These capabilities are all delivered as a set of high-performance web-services t
 
 * [Bundler]
 * [Ruby 2.3.1][Ruby]
+* [ImageMagick]
 
 # Installation
 
@@ -37,5 +38,16 @@ $ rspec
 $ rackup
 ```
 
+## Example
+
+```sh
+$ id=$(curl -sF image=@spec/fixtures/logo.gif -X POST 0.0.0.0:9292)
+$ curl -sI 0.0.0.0:9292/$id | grep image
+Content-Type: image/gif
+$ curl -sI 0.0.0.0:9292/$id.png | grep image
+Content-Type: image/png
+```
+
 [bundler]: http://bundler.io
 [ruby]: http://www.ruby-lang.org/en
+[imagemagick]: https://www.imagemagick.org/script/index.php
