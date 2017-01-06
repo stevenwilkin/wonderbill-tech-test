@@ -2,6 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     diff-lcs (1.2.5)
+    mini_magick (4.6.0)
     rack (1.6.5)
     rack-protection (1.5.3)
       rack
@@ -30,6 +31,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  mini_magick
   rack-test
   rspec
   sinatra

@@ -1,4 +1,5 @@
 require 'rack/test'
+require 'mini_magick'
 
 require_relative '../app'
 
@@ -80,6 +81,25 @@ RSpec.describe App do
       specify do
         expect(last_response.headers['Content-Type']).to eq('image/jpeg')
       end
+    end
+  end
+
+  describe 'uploaded image format conversion' do
+    before do
+      FileUtils.cp(image_path, uploads)
+    end
+
+    let(:format) { 'jpg' }
+    let(:converted_image) { MiniMagick::Image.read(last_response.body) }
+
+    before do
+      get "/logo.#{format}"
+    end
+
+    specify { expect(last_response).to be_ok }
+    specify { expect(converted_image.type).to eq('JPEG') }
+    specify do
+      expect(last_response.headers['Content-Type']).to eq('image/jpeg')
     end
   end
 end

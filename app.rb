@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'securerandom'
+require 'mini_magick'
 
 class App < Sinatra::Base
   helpers do
@@ -22,11 +23,19 @@ class App < Sinatra::Base
     body id
   end
 
-  get '/:id' do
+  get '/:id.?:format?' do
     matching_files = Dir[File.join(image_dir, "#{params[:id]}.*")]
 
     halt 404 unless matching_files.count == 1
 
-    send_file matching_files.first
+    image_path = matching_files.first
+
+    if params[:format]
+      image = MiniMagick::Image.open(image_path)
+      image.format(params[:format])
+      send_file image.path
+    else
+      send_file image_path
+    end
   end
 end
